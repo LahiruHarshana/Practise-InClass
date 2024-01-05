@@ -42,7 +42,6 @@
             <version>8.0.33</version>
         </dependency>
 
-        <!-- Jakarta JSON API -->
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>

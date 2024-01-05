@@ -3,6 +3,7 @@ package ijse.lk.practiseinclass;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ijse.lk.practiseinclass.db.DBConnection;
@@ -15,6 +16,25 @@ public class CustomerServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        try {
+            Connection connection = DBConnection.getDbConnection().getConnection();
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer");
+            stm.executeQuery();
+            ResultSet rst = stm.getResultSet();
+
+            while (rst.next()){
+                System.out.println(rst.getString(1));
+                System.out.println(rst.getString(2));
+                System.out.println(rst.getString(3));
+                System.out.println(rst.getString(4));
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String name = request.getParameter("name");
         String id = request.getParameter("id");
         String address = request.getParameter("address");
@@ -56,24 +76,6 @@ public class CustomerServlet extends HttpServlet {
             out.println("<h1>hello Servlet</h1>");
             out.println("</body></html>");
         }
-    }
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
-        String name = request.getParameter("name");
-        String id = request.getParameter("id");
-        String address = request.getParameter("address");
-        Double salary = Double.parseDouble(request.getParameter("salary"));
-
-        System.out.println("Name: " + name);
-        System.out.println("Id: " + id);
-        System.out.println("Address: " + address);
-        System.out.println("Salary: " + salary);
-
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>hello Post</h1>");
-        out.println("</body></html>");
     }
 
 }
