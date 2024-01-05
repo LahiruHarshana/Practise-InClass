@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ijse.lk.practiseinclass.db.DBConnection;
+import jakarta.json.JsonObjectBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -32,6 +33,8 @@ public class CustomerServlet extends HttpServlet {
                 writer.println("<p>Name: " + rst.getString(2) + "</p>");
                 writer.println("<p>Address: " + rst.getString(3) + "</p>");
                 writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
+
+                JsonObjectBuilder builder = jakarta.json.Json.createObjectBuilder();
 
                 jsonArr += jsonObject + ",";
 
