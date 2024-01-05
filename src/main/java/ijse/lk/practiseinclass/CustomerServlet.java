@@ -35,6 +35,7 @@ public class CustomerServlet extends HttpServlet {
                 writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
 
                 JsonObjectBuilder builder = jakarta.json.Json.createObjectBuilder();
+                builder.add("id", rst.getString(1));
 
                 jsonArr += jsonObject + ",";
 
