@@ -36,6 +36,7 @@ public class CustomerServlet extends HttpServlet {
                 stm.setString(1, id);
                 stm.setString(2, name);
                 stm.setString(3, address);
+                stm.setDouble(4, salary);
 
 
                 stm.executeUpdate();
