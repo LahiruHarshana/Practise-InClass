@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ijse.lk.practiseinclass.db.DBConnection;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
@@ -93,4 +94,10 @@ public class CustomerServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getParameter("id");
+        req.getParameter("name");
+        req.getParameter("address");
+    }
 }
