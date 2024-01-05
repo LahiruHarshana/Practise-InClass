@@ -38,7 +38,6 @@ public class CustomerServlet extends HttpServlet {
                 stm.setString(3, address);
                 stm.setDouble(4, salary);
 
-
                 stm.executeUpdate();
 
                 response.getWriter().println("Customer has been saved successfully");
@@ -49,13 +48,14 @@ public class CustomerServlet extends HttpServlet {
                 throw new RuntimeException(e);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
 
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>hello Servlet</h1>");
-        out.println("</body></html>");
+            PrintWriter out = response.getWriter();
+            out.println("<html><body>");
+            out.println("<h1>hello Servlet</h1>");
+            out.println("</body></html>");
+        }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
