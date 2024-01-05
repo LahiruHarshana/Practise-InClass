@@ -37,7 +37,7 @@ public class CustomerServlet extends HttpServlet {
                 jsonArr += jsonObject + ",";
 
             }
-            jsonArr="["+jsonArr+"]";
+            jsonArr="["+jsonArr.substring(jsonArr.length()-1)+"]";
             System.out.printf(jsonArr);
             writer.println("</body></html>");
 
