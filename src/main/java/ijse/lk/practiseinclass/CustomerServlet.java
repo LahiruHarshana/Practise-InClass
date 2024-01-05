@@ -25,6 +25,8 @@ public class CustomerServlet extends HttpServlet {
 
             writer.println("<html><body>");
 
+            String jsonArr = "";
+
             while (rst.next()) {
                 writer.println("<p>ID: " + rst.getString(1) + "</p>");
                 writer.println("<p>Name: " + rst.getString(2) + "</p>");
