@@ -33,7 +33,6 @@ public class CustomerServlet extends HttpServlet {
                 writer.println("<p>Address: " + rst.getString(3) + "</p>");
                 writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
 
-                String jsonObject = "{\"id\":\"" + rst.getString(1) + "\",\"name\":\"" + rst.getString(2) + "\",\"address\":\"" + rst.getString(3) + "\",\"salary\":\"" + rst.getDouble(4) + "\"}";
                 jsonArr += jsonObject + ",";
 
             }
