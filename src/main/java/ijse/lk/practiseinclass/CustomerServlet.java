@@ -10,29 +10,39 @@ import ijse.lk.practiseinclass.db.DBConnection;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
+@WebServlet(name = "CustomerServlet", value = "/customer")
 public class CustomerServlet extends HttpServlet {
     private String message;
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
             Connection connection = DBConnection.getDbConnection().getConnection();
-            PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer");
-            stm.executeQuery();
-            ResultSet rst = stm.getResultSet();
+            PreparedStatement pstm = connection.prepareStatement("select * from customer");
+            ResultSet rst = pstm.executeQuery();
 
-            while (rst.next()){
-                System.out.println(rst.getString(1));
-                System.out.println(rst.getString(2));
-                System.out.println(rst.getString(3));
-                System.out.println(rst.getString(4));
+            response.setContentType("text/html;charset=UTF-8");
+            PrintWriter writer = response.getWriter();
+
+            writer.println("<html><body>");
+
+            while (rst.next()) {
+                writer.println("<p>ID: " + rst.getString(1) + "</p>");
+                writer.println("<p>Name: " + rst.getString(2) + "</p>");
+                writer.println("<p>Address: " + rst.getString(3) + "</p>");
+                writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
+
+                String jsonObject = "{\"id\":\"" + rst.getString(1) + "\",\"name\":\"" + rst.getString(2) + "\",\"address\":\"" + rst.getString(3) + "\",\"salary\":\"" + rst.getDouble(4) + "\"}";
+
             }
+
+            writer.println("</body></html>");
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
         }
     }
+
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String name = request.getParameter("name");
