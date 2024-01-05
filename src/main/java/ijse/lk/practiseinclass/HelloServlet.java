@@ -1,4 +1,4 @@
-package ijse.lk.practiseinclass.practiseinclass;
+package ijse.lk.practiseinclass;
 
 import java.io.*;
 
@@ -46,7 +46,5 @@ public class HelloServlet extends HttpServlet {
         out.println("<h1>hello Post</h1>");
         out.println("</body></html>");
     }
-
-
 
 }
