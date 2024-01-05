@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
+    <script src="assets/bootstrap/js/bootstrap.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<section id="customerForm" style="position:absolute; top:10vh;width: 100%; height:99vh;">
+    <section class="container-fluid justify-content-center">
+        <section class="row justify-content-center">
+            <section class="col-12 col-sm-12 col-md-10 col-lg-9 col-xl-8 mt-3" style="border: 1px solid #3dd5f3; border-radius: 12px;-webkit-box-shadow: inset 10px 13px 110px -39px rgba(61,213,243,1);
+-moz-box-shadow: inset 10px 13px 110px -39px rgba(61,213,243,1);
+box-shadow: inset 10px 13px 110px -39px rgba(61,213,243,1);">
+                <div class="container-fluid">
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2 mb-5 mt-5" id="cSearchTxt" type="search" placeholder="Customer ID" style="background: transparent;border: 1px solid #3dd5f3; color: #3dd5f3" aria-label="Search">
+                        <button class="btn btn-outline-success mt-5 mb-5" id="cSearchBtn" type="button">Search</button>
+                    </form>
+                </div>
+
+                <!--input bars-->
+
+                <form id="customerTxtForm">
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="cId">Customer ID :</span>
+                        <input type="text" class="form-control" placeholder="Customer ID" id="cIdTxt" aria-label="Username" aria-describedby="cId">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" id="cNameTxt" class="form-control" placeholder="Name" aria-label="Recipient's username" aria-describedby="cName">
+                        <span class="input-group-text" id="cName">: Customer Name</span>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="cAddress">Customer Address :</span>
+                        <input type="text"  id="cAddressTxt" class="form-control" placeholder="Address" aria-label="Username" aria-describedby="cAddress">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" id="cSalaryText" class="form-control" placeholder="Salary" aria-label="Recipient's username" aria-describedby="cSalary">
+                        <span class="input-group-text" id="cSalary">: Customer Salary</span>
+                    </div>
+                </form>
+
+                <div class="btn-group mt-5 mb-5" role="group" aria-label="Basic outlined example">
+                    <button id="cSavebtn" type="submit" class="btn btn-outline-primary">Save</button>
+                    <button id="cUpdateBtn" type="button" class="btn btn-outline-primary">Update</button>
+                    <button id="cDeleteBtn" type="button" class="btn btn-outline-primary">Delete</button>
+                    <button id="clearBtn" type="button" class="btn btn-outline-primary">Clear All</button>
+                </div>
+
+
+                <!--table-->
+
+                <table class="table col-12 col-sm-12 col-md-10 col-lg-9 col-xl-8">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Customer Name</th>
+                        <th scope="col">Customer ID</th>
+                        <th scope="col">Customer Address</th>
+                        <th scope="col">Salary</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tblCustomer">
+
+                    </tbody>
+                </table>
+
+            </section>
+
+        </section>
+
+    </section>
+
+</section>
+
+</body>
+</html>
