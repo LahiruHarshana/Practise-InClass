@@ -89,29 +89,29 @@
 
                 <!-- Input bars -->
 
-                <form action="hello-servlet" method="post" enctype="application/x-www-form-urlencoded">
+                <form action="hello-servlet" method="get">
 
                     <!-- Customer ID -->
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="cId">Customer ID :</span>
-                        <input type="text" class="form-control" placeholder="Customer ID" id="cIdTxt" aria-label="Customer ID" aria-describedby="cId">
+                        <input type="text" name="id" class="form-control" placeholder="Customer ID" id="cIdTxt" aria-label="Customer ID" aria-describedby="cId">
                     </div>
 
                     <!-- Customer Name -->
                     <div class="input-group mb-3">
-                        <input type="text" id="cNameTxt" class="form-control" placeholder="Name" aria-label="Customer Name" aria-describedby="cName">
+                        <input type="text" name="name" id="cNameTxt" class="form-control" placeholder="Name" aria-label="Customer Name" aria-describedby="cName">
                         <span class="input-group-text" id="cName">: Customer Name</span>
                     </div>
 
                     <!-- Customer Address -->
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="cAddress">Customer Address :</span>
-                        <input type="text" id="cAddressTxt" class="form-control" placeholder="Address" aria-label="Customer Address" aria-describedby="cAddress">
+                        <input type="text" name="address" id="cAddressTxt" class="form-control" placeholder="Address" aria-label="Customer Address" aria-describedby="cAddress">
                     </div>
 
                     <!-- Customer Salary -->
                     <div class="input-group mb-3">
-                        <input type="text" id="cSalaryText" class="form-control" placeholder="Salary" aria-label="Customer Salary" aria-describedby="cSalary">
+                        <input type="text" id="cSalaryText" name="salary" class="form-control" placeholder="Salary" aria-label="Customer Salary" aria-describedby="cSalary">
                         <span class="input-group-text" id="cSalary">: Customer Salary</span>
                     </div>
 
