@@ -31,6 +31,15 @@ public class HelloServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
+        String name = request.getParameter("name");
+        String id = request.getParameter("id");
+        String address = request.getParameter("address");
+        Double salary = Double.parseDouble(request.getParameter("salary"));
+
+        System.out.println("Name: " + name);
+        System.out.println("Id: " + id);
+        System.out.println("Address: " + address);
+        System.out.println("Salary: " + salary);
 
         PrintWriter out = response.getWriter();
         out.println("<html><body>");
