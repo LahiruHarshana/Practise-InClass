@@ -18,4 +18,15 @@ public class HelloServlet extends HttpServlet {
         out.println("</body></html>");
     }
 
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+        out.println("<h1>hello Post</h1>");
+        out.println("</body></html>");
+    }
+
+
+
 }
