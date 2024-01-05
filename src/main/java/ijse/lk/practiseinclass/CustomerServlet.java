@@ -39,6 +39,8 @@ public class CustomerServlet extends HttpServlet {
                 builder.add("name", rst.getString(2));
                 builder.add("address", rst.getString(3));
                 builder.add("salary", rst.getDouble(4));
+
+                String jsonObject = builder.build().toString();
                 jsonArr += jsonObject + ",";
 
             }
