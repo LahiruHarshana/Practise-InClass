@@ -37,7 +37,6 @@ public class CustomerServlet extends HttpServlet {
                 jsonArr += jsonObject + ",";
 
             }
-
             writer.println("</body></html>");
 
         } catch (SQLException | ClassNotFoundException e) {
