@@ -20,7 +20,6 @@ public class CustomerServlet extends HttpServlet {
             PreparedStatement pstm = connection.prepareStatement("select * from customer");
             ResultSet rst = pstm.executeQuery();
 
-            response.setContentType("text/html;charset=UTF-8");
             PrintWriter writer = response.getWriter();
 
             writer.println("<html><body>");
@@ -39,6 +38,7 @@ public class CustomerServlet extends HttpServlet {
             }
             jsonArr="["+jsonArr.substring(0,jsonArr.length()-1)+"]";
             System.out.printf(jsonArr);
+            response.setContentType("application/json");
             writer.println("<h1>JSON Array: " + jsonArr + "</h1>");
             writer.println("</body></html>");
 
