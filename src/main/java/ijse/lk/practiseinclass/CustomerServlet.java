@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ijse.lk.practiseinclass.db.DBConnection;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonReader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -41,6 +44,7 @@ public class CustomerServlet extends HttpServlet {
                 builder.add("salary", rst.getDouble(4));
 
                 String jsonObject = builder.build().toString();
+
                 jsonArr += jsonObject + ",";
 
             }
@@ -58,15 +62,15 @@ public class CustomerServlet extends HttpServlet {
 
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String name = request.getParameter("name");
-        String id = request.getParameter("id");
-        String address = request.getParameter("address");
-        Double salary = Double.parseDouble(request.getParameter("salary"));
+//        String name = request.getParameter("name");
+//        String id = request.getParameter("id");
+//        String address = request.getParameter("address");
+//        Double salary = Double.parseDouble(request.getParameter("salary"));
 
-        System.out.println("Name: " + name);
-        System.out.println("Id: " + id);
-        System.out.println("Address: " + address);
-        System.out.println("Salary: " + salary);
+//        System.out.println("Name: " + name);
+//        System.out.println("Id: " + id);
+//        System.out.println("Address: " + address);
+//        System.out.println("Salary: " + salary);
 
         response.setContentType("text/html");
 
@@ -74,6 +78,14 @@ public class CustomerServlet extends HttpServlet {
 
         try {
             try {
+
+                JsonReader reader = Json.createReader(request.getReader());
+                JsonObject jsonObject = reader.readObject();
+                String id = jsonObject.getString("id");
+                String name = jsonObject.getString("name");
+                String address = jsonObject.getString("address");
+                Double salary = Double.valueOf(jsonObject.getString("salary"));
+
                 connection = DBConnection.getDbConnection().getConnection();
                 PreparedStatement stm = connection.prepareStatement("INSERT INTO customer (cusID, cusName, cusAddress,cusSalary) VALUES (?, ?, ?,?)");
                 stm.setString(1, id);
