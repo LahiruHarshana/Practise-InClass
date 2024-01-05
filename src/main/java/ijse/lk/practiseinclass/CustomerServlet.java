@@ -38,6 +38,7 @@ public class CustomerServlet extends HttpServlet {
                 builder.add("id", rst.getString(1));
                 builder.add("name", rst.getString(2));
                 builder.add("address", rst.getString(3));
+                builder.add("salary", rst.getDouble(4));
                 jsonArr += jsonObject + ",";
 
             }
