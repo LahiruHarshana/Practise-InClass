@@ -58,15 +58,6 @@ public class CustomerServlet extends HttpServlet {
 
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        String name = request.getParameter("name");
-//        String id = request.getParameter("id");
-//        String address = request.getParameter("address");
-//        Double salary = Double.parseDouble(request.getParameter("salary"));
-
-//        System.out.println("Name: " + name);
-//        System.out.println("Id: " + id);
-//        System.out.println("Address: " + address);
-//        System.out.println("Salary: " + salary);
 
         response.setContentType("text/html");
 
@@ -155,5 +146,9 @@ try {
             e.printStackTrace();
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
         }
+
+
     }
+
+
 }
