@@ -147,7 +147,6 @@ try {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
         }
 
-
     }
 
 
