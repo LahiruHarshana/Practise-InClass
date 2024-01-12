@@ -180,10 +180,10 @@
                 contentType: 'application/json',
                 async: true,
                 data: JSON.stringify({
-                    id: customerId,
-                    name: customerName,
-                    address: customerAddress,
-                    salary: customerSalary
+                    cusID: customerId,
+                    cusName: customerName,
+                    cusAddress: customerAddress,
+                    cusSalary: customerSalary
                 }),
                 success: function (data) {
                     alert("Customer has been updated successfully");
@@ -204,6 +204,26 @@
             let customerName = $('#cNameTxt').val();
             let customerAddress = $('#cAddressTxt').val();
             let customerSalary = $('#cSalaryText').val();
+
+
+            $.ajax({
+                method: "POST",
+                url: "http://localhost:8080/hello/customer",
+                contentType: 'application/json',
+                async: true,
+                data: JSON.stringify({
+                    id: customerId,
+                    name: customerName,
+                    address: customerAddress,
+                    salary: customerSalary
+                }),
+                success: function (data) {
+                    alert("Customer has been saved successfully");
+                },
+                error: function (data) {
+                    alert("Failed to save the customer");
+                }
+            });
         });
     });
 
