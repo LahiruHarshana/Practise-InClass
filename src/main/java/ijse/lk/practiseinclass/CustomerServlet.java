@@ -5,76 +5,48 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import ijse.lk.practiseinclass.db.DBConnection;
-import jakarta.json.*;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.Customer;
 
 @WebServlet(name = "CustomerServlet", value = "/customer")
 public class CustomerServlet extends HttpServlet {
     private String message;
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-        objectBuilder.add("id", "C001");
-        objectBuilder.add("name", "Kasun");
-        objectBuilder.add("address", "Galle");
+            Connection connection = null;
 
-        JsonObjectBuilder addressObject = Json.createObjectBuilder();
-        addressObject.add("no",10);
-        addressObject.add("Street","weligama");
+            try {
+                try {
+                    connection = DBConnection.getDbConnection().getConnection();
+                    PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer");
+                    PrintWriter writer = response.getWriter();
+                    ResultSet rst = stm.executeQuery();
 
+                    ArrayList<String> allCustomer = new ArrayList<>();
 
-        objectBuilder.add("address",addressObject);
+                    while (rst.next()){
+                        allCustomer.add(JsonbBuilder.create().toJson(rst));
+                    }
+                    writer.print(allCustomer);
+                    System.out.println(allCustomer);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
 
-        JsonArrayBuilder contactArray = Json.createArrayBuilder();
-        contactArray.add("077-1234567");
-        contactArray.add("077-1234568");
+            } catch (Exception e) {
+            }
 
-        objectBuilder.add("contact",contactArray);
-
-
-        objectBuilder.build();
-
-//        try {
-//            Connection connection = DBConnection.getDbConnection().getConnection();
-//            PreparedStatement pstm = connection.prepareStatement("select * from customer");
-//            ResultSet rst = pstm.executeQuery();
-//
-//            PrintWriter writer = response.getWriter();
-//            writer.println("<html><body>");
-//
-//            JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-//
-//            while (rst.next()) {
-//                writer.println("<p>ID: " + rst.getString(1) + "</p>");
-//                writer.println("<p>Name: " + rst.getString(2) + "</p>");
-//                writer.println("<p>Address: " + rst.getString(3) + "</p>");
-//                writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
-//
-//                JsonObjectBuilder builder = Json.createObjectBuilder()
-//                        .add("id", rst.getString(1))
-//                        .add("name", rst.getString(2))
-//                        .add("address", rst.getString(3))
-//                        .add("salary", rst.getDouble(4));
-//
-//                jsonArrayBuilder.add(builder.build());
-//            }
-//
-//            JsonArray jsonArray = jsonArrayBuilder.build();
-//            String jsonString = jsonArray.toString();
-//
-//            response.setContentType("application/json");
-//            writer.println("<h1>JSON Array: " + jsonString + "</h1>");
-//            writer.println("</body></html>");
-//
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
-//        }
     }
+
 
 
 
@@ -87,23 +59,40 @@ public class CustomerServlet extends HttpServlet {
         try {
             try {
 
-                JsonReader reader = Json.createReader(request.getReader());
-                JsonObject jsonObject = reader.readObject();
-                String id = jsonObject.getString("id");
-                String name = jsonObject.getString("name");
-                String address = jsonObject.getString("address");
-                Double salary = Double.valueOf(jsonObject.getString("salary"));
+                Jsonb jsonb = JsonbBuilder.create();
+                Customer customer = jsonb.fromJson(request.getReader(), Customer.class);
+
+                if (customer.getCusId() == null || customer.getCusId().matches("C\\d{3}") == false) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
+                if (customer.getCusName() == null || customer.getCusName().trim().isEmpty()) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
+
+                if (customer.getCusAddress() == null || customer.getCusAddress().trim().isEmpty()) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
+
+                if (customer.getCusSalary() == 0) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
 
                 connection = DBConnection.getDbConnection().getConnection();
-                PreparedStatement stm = connection.prepareStatement("INSERT INTO customer (cusID, cusName, cusAddress,cusSalary) VALUES (?, ?, ?,?)");
-                stm.setString(1, id);
-                stm.setString(2, name);
-                stm.setString(3, address);
-                stm.setDouble(4, salary);
+                PreparedStatement stm = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?,?)");
+                stm.setObject(1, customer.getCusId());
+                stm.setObject(2, customer.getCusName());
+                stm.setObject(3, customer.getCusAddress());
+                stm.setObject(4, customer.getCusSalary());
 
-                stm.executeUpdate();
-
-                response.getWriter().println("Customer has been saved successfully");
+                if (stm.executeUpdate() > 0) {
+                    response.setStatus(HttpServletResponse.SC_CREATED);
+                } else {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -112,34 +101,48 @@ public class CustomerServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-
-            PrintWriter out = response.getWriter();
-            out.println("<html><body>");
-            out.println("<h1>hello Servlet</h1>");
-            out.println("</body></html>");
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Connection connection = null;
+
         try {
-            JsonReader reader = Json.createReader(req.getReader());
-            JsonObject jsonObject = reader.readObject();
-            String id = jsonObject.getString("id");
-            String name = jsonObject.getString("name");
-            String address = jsonObject.getString("address");
-            Double salary = Double.valueOf(jsonObject.getString("salary"));
+            Jsonb jsonb = JsonbBuilder.create();
+            Customer customer = jsonb.fromJson(req.getReader(), Customer.class);
 
-            Connection connection = DBConnection.getDbConnection().getConnection();
+            connection = DBConnection.getDbConnection().getConnection();
+
+            if (customer.getCusId() == null || customer.getCusId().matches("C\\d{3}") == false) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+            if (customer.getCusName() == null || customer.getCusName().trim().isEmpty()) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
+            if (customer.getCusAddress() == null || customer.getCusAddress().trim().isEmpty()) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
+            if (customer.getCusSalary() == 0) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
             PreparedStatement stm = connection.prepareStatement("UPDATE customer SET cusName=?, cusAddress=?, cusSalary=? WHERE cusID=?");
-            stm.setString(1, name);
-            stm.setString(2, address);
-            stm.setDouble(3, salary);
-            stm.setString(4, id);
-
-            stm.executeUpdate();
-
+            stm.setObject(1, customer.getCusName());
+            stm.setObject(2, customer.getCusAddress());
+            stm.setObject(3, customer.getCusSalary());
+            stm.setObject(4, customer.getCusId());
+            if (stm.executeUpdate() > 0) {
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+            } else {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
             resp.getWriter().println("Customer has been updated successfully");
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -150,17 +153,26 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Connection connection = null;
+
         try {
-            JsonReader reader = Json.createReader(req.getReader());
-            JsonObject jsonObject = reader.readObject();
-            String id = jsonObject.getString("id");
+            Jsonb jsonb = JsonbBuilder.create();
+            Customer customer = jsonb.fromJson(req.getReader(), Customer.class);
 
-            Connection connection = DBConnection.getDbConnection().getConnection();
+            if (customer.getCusId() == null || customer.getCusId().matches("C\\d{3}") == false) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+
+            connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement stm = connection.prepareStatement("DELETE FROM customer WHERE cusID=?");
-            stm.setString(1, id);
+            stm.setObject(1, customer.getCusId());
 
-            stm.executeUpdate();
-
+            if (stm.executeUpdate() > 0) {
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+            } else {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
             resp.getWriter().println("Customer has been deleted successfully");
 
         } catch (SQLException | ClassNotFoundException e) {
