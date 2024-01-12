@@ -8,8 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
     <!-- Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.js"></script>
+
     <!-- Your custom styles or additional CSS -->
     <style>
         body {
@@ -74,6 +73,7 @@
             background-color: #f0f8ff;
         }
     </style>
+    <script src="assets/bootstrap/js/jquery-3.7.1.min.js"></script>
 
 </head>
 
@@ -141,14 +141,13 @@
         </div>
     </div>
 </section>
-<!-- Add this script section at the end of your HTML file, just before the closing </body> tag -->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/bootstrap/js/bootstrap.js"></script>
 <script>
 
     $(document).ready(function () {
 
-        $('form').submit(function (event) {
-            event.preventDefault();
 
 
             var customerId = $('#cIdTxt').val();
@@ -157,29 +156,13 @@
             var customerSalary = $('#cSalaryText').val();
 
 
-            if (customerId && customerName && customerAddress && customerSalary) {
-                var newRow = '<tr>' +
-                    '<td>' + customerName + '</td>' +
-                    '<td>' + customerId + '</td>' +
-                    '<td>' + customerAddress + '</td>' +
-                    '<td>' + customerSalary + '</td>' +
-                    '</tr>';
-
-                $('#tblCustomer').append(newRow);
-
-                $('form')[0].reset();
-            } else {
-                alert('Please fill in all the required fields.');
-            }
-        });
-
         $('#clearBtn').click(function () {
+            $('#cIdTxt').val("")
 
         });
 
 
         $('#cSearchBtn').click(function () {
-
         });
 
         $('#cUpdateBtn').click(function () {
