@@ -16,7 +16,6 @@ import jakarta.servlet.annotation.*;
 public class CustomerServlet extends HttpServlet {
     private String message;
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         try {
             Connection connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement pstm = connection.prepareStatement("select * from customer");
