@@ -20,6 +20,8 @@ public class CustomerServlet extends HttpServlet {
     private String message;
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+            response.setContentType("application/json");
+
             Connection connection = null;
 
             try {
