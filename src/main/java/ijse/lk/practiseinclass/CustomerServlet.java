@@ -35,6 +35,9 @@ public class CustomerServlet extends HttpServlet {
 
         objectBuilder.add("contact",contactArray);
 
+
+        objectBuilder.build();
+
 //        try {
 //            Connection connection = DBConnection.getDbConnection().getConnection();
 //            PreparedStatement pstm = connection.prepareStatement("select * from customer");
