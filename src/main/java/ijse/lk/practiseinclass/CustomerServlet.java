@@ -24,6 +24,10 @@ public class CustomerServlet extends HttpServlet {
 
         JsonObjectBuilder addressObject = Json.createObjectBuilder();
         addressObject.add("no",10);
+        addressObject.add("Street","weligama");
+
+
+        objectBuilder.add("address",addressObject);
 
 //        try {
 //            Connection connection = DBConnection.getDbConnection().getConnection();
