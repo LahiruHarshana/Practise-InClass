@@ -16,42 +16,51 @@ import jakarta.servlet.annotation.*;
 public class CustomerServlet extends HttpServlet {
     private String message;
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("select * from customer");
-            ResultSet rst = pstm.executeQuery();
 
-            PrintWriter writer = response.getWriter();
-            writer.println("<html><body>");
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        objectBuilder.add("id", "C001");
+        objectBuilder.add("name", "Kasun");
+        objectBuilder.add("address", "Galle");
 
-            JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        JsonObjectBuilder addressObject = Json.createObjectBuilder();
+        addressObject.add("no",10);
 
-            while (rst.next()) {
-                writer.println("<p>ID: " + rst.getString(1) + "</p>");
-                writer.println("<p>Name: " + rst.getString(2) + "</p>");
-                writer.println("<p>Address: " + rst.getString(3) + "</p>");
-                writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
-
-                JsonObjectBuilder builder = Json.createObjectBuilder()
-                        .add("id", rst.getString(1))
-                        .add("name", rst.getString(2))
-                        .add("address", rst.getString(3))
-                        .add("salary", rst.getDouble(4));
-
-                jsonArrayBuilder.add(builder.build());
-            }
-
-            JsonArray jsonArray = jsonArrayBuilder.build();
-            String jsonString = jsonArray.toString();
-
-            response.setContentType("application/json");
-            writer.println("<h1>JSON Array: " + jsonString + "</h1>");
-            writer.println("</body></html>");
-
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
-        }
+//        try {
+//            Connection connection = DBConnection.getDbConnection().getConnection();
+//            PreparedStatement pstm = connection.prepareStatement("select * from customer");
+//            ResultSet rst = pstm.executeQuery();
+//
+//            PrintWriter writer = response.getWriter();
+//            writer.println("<html><body>");
+//
+//            JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+//
+//            while (rst.next()) {
+//                writer.println("<p>ID: " + rst.getString(1) + "</p>");
+//                writer.println("<p>Name: " + rst.getString(2) + "</p>");
+//                writer.println("<p>Address: " + rst.getString(3) + "</p>");
+//                writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
+//
+//                JsonObjectBuilder builder = Json.createObjectBuilder()
+//                        .add("id", rst.getString(1))
+//                        .add("name", rst.getString(2))
+//                        .add("address", rst.getString(3))
+//                        .add("salary", rst.getDouble(4));
+//
+//                jsonArrayBuilder.add(builder.build());
+//            }
+//
+//            JsonArray jsonArray = jsonArrayBuilder.build();
+//            String jsonString = jsonArray.toString();
+//
+//            response.setContentType("application/json");
+//            writer.println("<h1>JSON Array: " + jsonString + "</h1>");
+//            writer.println("</body></html>");
+//
+//        } catch (SQLException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
+//        }
     }
 
 
