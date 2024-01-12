@@ -29,6 +29,10 @@ public class CustomerServlet extends HttpServlet {
 
         objectBuilder.add("address",addressObject);
 
+        JsonArrayBuilder contactArray = Json.createArrayBuilder();
+        contactArray.add("077-1234567");
+        contactArray.add("077-1234568");
+
 //        try {
 //            Connection connection = DBConnection.getDbConnection().getConnection();
 //            PreparedStatement pstm = connection.prepareStatement("select * from customer");
