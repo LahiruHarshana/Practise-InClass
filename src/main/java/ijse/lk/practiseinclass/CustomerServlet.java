@@ -7,10 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import ijse.lk.practiseinclass.db.DBConnection;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
-import jakarta.json.JsonReader;
+import jakarta.json.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -26,10 +23,9 @@ public class CustomerServlet extends HttpServlet {
             ResultSet rst = pstm.executeQuery();
 
             PrintWriter writer = response.getWriter();
-
             writer.println("<html><body>");
 
-            String jsonArr = "";
+            JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
 
             while (rst.next()) {
                 writer.println("<p>ID: " + rst.getString(1) + "</p>");
@@ -37,21 +33,20 @@ public class CustomerServlet extends HttpServlet {
                 writer.println("<p>Address: " + rst.getString(3) + "</p>");
                 writer.println("<p>Salary: " + rst.getDouble(4) + "</p>");
 
-                JsonObjectBuilder builder = jakarta.json.Json.createObjectBuilder();
-                builder.add("id", rst.getString(1));
-                builder.add("name", rst.getString(2));
-                builder.add("address", rst.getString(3));
-                builder.add("salary", rst.getDouble(4));
+                JsonObjectBuilder builder = Json.createObjectBuilder()
+                        .add("id", rst.getString(1))
+                        .add("name", rst.getString(2))
+                        .add("address", rst.getString(3))
+                        .add("salary", rst.getDouble(4));
 
-                String jsonObject = builder.build().toString();
-
-                jsonArr += jsonObject + ",";
-
+                jsonArrayBuilder.add(builder.build());
             }
-            jsonArr="["+jsonArr.substring(0,jsonArr.length()-1)+"]";
-            System.out.printf(jsonArr);
+
+            JsonArray jsonArray = jsonArrayBuilder.build();
+            String jsonString = jsonArray.toString();
+
             response.setContentType("application/json");
-            writer.println("<h1>JSON Array: " + jsonArr + "</h1>");
+            writer.println("<h1>JSON Array: " + jsonString + "</h1>");
             writer.println("</body></html>");
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -59,6 +54,7 @@ public class CustomerServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
         }
     }
+
 
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -115,8 +111,49 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getParameter("id");
-        req.getParameter("name");
-        req.getParameter("address");
+        try {
+            JsonReader reader = Json.createReader(req.getReader());
+            JsonObject jsonObject = reader.readObject();
+            String id = jsonObject.getString("id");
+            String name = jsonObject.getString("name");
+            String address = jsonObject.getString("address");
+            Double salary = Double.valueOf(jsonObject.getString("salary"));
+
+            Connection connection = DBConnection.getDbConnection().getConnection();
+            PreparedStatement stm = connection.prepareStatement("UPDATE customer SET cusName=?, cusAddress=?, cusSalary=? WHERE cusID=?");
+            stm.setString(1, name);
+            stm.setString(2, address);
+            stm.setDouble(3, salary);
+            stm.setString(4, id);
+
+            stm.executeUpdate();
+
+            resp.getWriter().println("Customer has been updated successfully");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+try {
+            JsonReader reader = Json.createReader(req.getReader());
+            JsonObject jsonObject = reader.readObject();
+            String id = jsonObject.getString("id");
+
+            Connection connection = DBConnection.getDbConnection().getConnection();
+            PreparedStatement stm = connection.prepareStatement("DELETE FROM customer WHERE cusID=?");
+            stm.setString(1, id);
+
+            stm.executeUpdate();
+
+            resp.getWriter().println("Customer has been deleted successfully");
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
+        }
     }
 }
