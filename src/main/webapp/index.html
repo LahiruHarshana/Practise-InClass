@@ -141,6 +141,56 @@
         </div>
     </div>
 </section>
+<!-- Add this script section at the end of your HTML file, just before the closing </body> tag -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        // Function to handle the form submission
+        $('form').submit(function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get values from form fields
+            var customerId = $('#cIdTxt').val();
+            var customerName = $('#cNameTxt').val();
+            var customerAddress = $('#cAddressTxt').val();
+            var customerSalary = $('#cSalaryText').val();
+
+            // Validate if all required fields are filled
+            if (customerId && customerName && customerAddress && customerSalary) {
+                // Create a new table row with the provided data
+                var newRow = '<tr>' +
+                    '<td>' + customerName + '</td>' +
+                    '<td>' + customerId + '</td>' +
+                    '<td>' + customerAddress + '</td>' +
+                    '<td>' + customerSalary + '</td>' +
+                    '</tr>';
+
+                // Append the new row to the table body
+                $('#tblCustomer').append(newRow);
+
+                // Clear the form fields
+                $('form')[0].reset();
+            } else {
+                // Alert the user if any required field is empty
+                alert('Please fill in all the required fields.');
+            }
+        });
+
+        // Function to handle the 'Clear All' button click
+        $('#clearBtn').click(function () {
+            // Clear the form fields and the table body
+            $('form')[0].reset();
+            $('#tblCustomer').empty();
+        });
+
+        // You can add similar functions for other buttons such as Update, Delete, Search, etc.
+
+    });
+
+</script>
+
 </body>
 
 </html>
