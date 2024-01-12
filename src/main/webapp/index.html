@@ -212,10 +212,10 @@
                 contentType: 'application/json',
                 async: true,
                 data: JSON.stringify({
-                    id: customerId,
-                    name: customerName,
-                    address: customerAddress,
-                    salary: customerSalary
+                    cusID: customerId,
+                    cusName: customerName,
+                    cusAddress: customerAddress,
+                    cusSalary: customerSalary
                 }),
                 success: function (data) {
                     alert("Customer has been saved successfully");
