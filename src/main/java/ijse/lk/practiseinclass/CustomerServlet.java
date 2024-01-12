@@ -33,6 +33,8 @@ public class CustomerServlet extends HttpServlet {
         contactArray.add("077-1234567");
         contactArray.add("077-1234568");
 
+        objectBuilder.add("contact",contactArray);
+
 //        try {
 //            Connection connection = DBConnection.getDbConnection().getConnection();
 //            PreparedStatement pstm = connection.prepareStatement("select * from customer");
