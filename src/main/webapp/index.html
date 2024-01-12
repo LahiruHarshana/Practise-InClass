@@ -174,11 +174,34 @@
             let customerAddress = $('#cAddressTxt').val();
             let customerSalary = $('#cSalaryText').val();
 
+            $.ajax({
+                method: "PUT",
+                url: "http://localhost:8080/hello/customer",
+                contentType: 'application/json',
+                async: true,
+                data: JSON.stringify({
+                    id: customerId,
+                    name: customerName,
+                    address: customerAddress,
+                    salary: customerSalary
+                }),
+                success: function (data) {
+                    alert("Customer has been updated successfully");
+                },
+                error: function (data) {
+                    alert("Failed to update the customer");
+                }
+            });
         });
 
 
         $('#cDeleteBtn').click(function () {
 
+        });
+
+        $('#cSavebtn').click(function (){
+            let customerId = $('#cIdTxt').val();
+            let customerName = $('#cNameTxt').val();
         });
     });
 
