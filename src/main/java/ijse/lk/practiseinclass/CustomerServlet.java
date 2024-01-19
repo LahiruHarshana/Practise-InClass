@@ -19,32 +19,32 @@ import model.Customer;
 public class CustomerServlet extends HttpServlet {
     private String message;
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-            response.setContentType("application/json");
-
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("application/json");
             Connection connection = null;
 
             try {
-                try {
-                    connection = DBConnection.getDbConnection().getConnection();
-                    PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer");
-                    PrintWriter writer = response.getWriter();
-                    ResultSet rst = stm.executeQuery();
+                connection = DBConnection.getDbConnection().getConnection();
+                PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer");
+                ResultSet rst = stm.executeQuery();
 
-                    ArrayList<String> allCustomer = new ArrayList<>();
-
-                    while (rst.next()){
-                        allCustomer.add(JsonbBuilder.create().toJson(rst));
-                    }
-                    writer.print(allCustomer);
-                    System.out.println(allCustomer);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                ArrayList<Customer> customers = new ArrayList<>();
+                while (rst.next()) {
+                    String id = rst.getString(1);
+                    String name = rst.getString(2);
+                    String address = rst.getString(3);
+                    double salary = rst.getDouble(4);
+                    customers.add(new Customer(id, name, address, salary));
                 }
 
-            } catch (Exception e) {
+                Jsonb jsonb = JsonbBuilder.create();
+                String json = jsonb.toJson(customers);
+                PrintWriter out = response.getWriter();
+                out.println(json);
+
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
             }
 
     }
@@ -53,7 +53,7 @@ public class CustomerServlet extends HttpServlet {
 
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+        response.addHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/html");
 
         Connection connection = null;
@@ -64,31 +64,13 @@ public class CustomerServlet extends HttpServlet {
                 Jsonb jsonb = JsonbBuilder.create();
                 Customer customer = jsonb.fromJson(request.getReader(), Customer.class);
 
-                if (customer.getCusId() == null || customer.getCusId().matches("C\\d{3}") == false) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
-                if (customer.getCusName() == null || customer.getCusName().trim().isEmpty()) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
-
-                if (customer.getCusAddress() == null || customer.getCusAddress().trim().isEmpty()) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
-
-                if (customer.getCusSalary() == 0) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
 
                 connection = DBConnection.getDbConnection().getConnection();
                 PreparedStatement stm = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?,?)");
-                stm.setObject(1, customer.getCusId());
-                stm.setObject(2, customer.getCusName());
-                stm.setObject(3, customer.getCusAddress());
-                stm.setObject(4, customer.getCusSalary());
+                stm.setString(1, customer.getCusId());
+                stm.setString(2, customer.getCusName());
+                stm.setString(3, customer.getCusAddress());
+                stm.setDouble(4, customer.getCusSalary());
 
                 if (stm.executeUpdate() > 0) {
                     response.setStatus(HttpServletResponse.SC_CREATED);
