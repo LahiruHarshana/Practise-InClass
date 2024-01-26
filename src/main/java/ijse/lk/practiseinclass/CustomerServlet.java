@@ -48,43 +48,31 @@ public class CustomerServlet extends HttpServlet {
             }
 
     }
-
-
-
-
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.addHeader("Access-Control-Allow-Origin", "*");
-        response.setContentType("text/html");
-
+        response.setContentType("application/json");
         Connection connection = null;
-
         try {
-            try {
+            Jsonb jsonb = JsonbBuilder.create();
+            Customer customer = jsonb.fromJson(request.getReader(), Customer.class);
 
-                Jsonb jsonb = JsonbBuilder.create();
-                Customer customer = jsonb.fromJson(request.getReader(), Customer.class);
+            connection = DBConnection.getDbConnection().getConnection();
 
-
-                connection = DBConnection.getDbConnection().getConnection();
-                PreparedStatement stm = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?,?)");
-                stm.setString(1, customer.getCusId());
-                stm.setString(2, customer.getCusName());
-                stm.setString(3, customer.getCusAddress());
-                stm.setDouble(4, customer.getCusSalary());
-
-                if (stm.executeUpdate() > 0) {
-                    response.setStatus(HttpServletResponse.SC_CREATED);
-                } else {
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                }
-
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+            PreparedStatement stm = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?,?)");
+            stm.setString(1, customer.getCusId());
+            stm.setString(2, customer.getCusName());
+            stm.setString(3, customer.getCusAddress());
+            stm.setDouble(4, customer.getCusSalary());
+            if (stm.executeUpdate() > 0) {
+                response.setStatus(HttpServletResponse.SC_CREATED);
+            } else {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
+            response.getWriter().println("Customer has been saved successfully");
 
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
         }
     }
 
